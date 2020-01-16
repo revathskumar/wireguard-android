@@ -113,6 +113,7 @@ abstract class WireGuardVpnService : android.net.VpnService(), ServiceProxy {
 fun VpnService.Builder.applyConfig(config: Config): VpnService.Builder {
     config.`interface`.apply {
         excludedApplications.forEach { addDisallowedApplication(it) }
+        includedApplications.forEach { addAllowedApplication(it) }
         addresses.forEach { addAddress(it.address, it.mask) }
         dnsServers.forEach { addDnsServer(it.hostAddress) }
         setMtu(mtu.orElse(1280))

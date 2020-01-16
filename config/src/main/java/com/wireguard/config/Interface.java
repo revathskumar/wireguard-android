@@ -42,6 +42,7 @@ public final class Interface {
     private final Set<InetNetwork> addresses;
     private final Set<InetAddress> dnsServers;
     private final Set<String> excludedApplications;
+    private final Set<String> includedApplications;
     private final KeyPair keyPair;
     private final Optional<Integer> listenPort;
     private final Optional<Integer> mtu;
@@ -51,6 +52,7 @@ public final class Interface {
         addresses = Collections.unmodifiableSet(new LinkedHashSet<>(builder.addresses));
         dnsServers = Collections.unmodifiableSet(new LinkedHashSet<>(builder.dnsServers));
         excludedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.excludedApplications));
+        includedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.includedApplications));
         keyPair = Objects.requireNonNull(builder.keyPair, "Interfaces must have a private key");
         listenPort = builder.listenPort;
         mtu = builder.mtu;
@@ -138,6 +140,16 @@ public final class Interface {
     public Set<String> getExcludedApplications() {
         // The collection is already immutable.
         return excludedApplications;
+    }
+
+    /**
+     * Returns the set of applications allowed to use the interface.
+     *
+     * @return a set of package names
+     */
+    public Set<String> getIncludedApplications() {
+        // The collection is already immutable.
+        return includedApplications;
     }
 
     /**
@@ -239,6 +251,8 @@ public final class Interface {
         private final Set<InetAddress> dnsServers = new LinkedHashSet<>();
         // Defaults to an empty set.
         private final Set<String> excludedApplications = new LinkedHashSet<>();
+        // Defaults to an empty set.
+        private final Set<String> includedApplications = new LinkedHashSet<>();
         // No default; must be provided before building.
         @Nullable private KeyPair keyPair;
         // Defaults to not present.
@@ -280,6 +294,16 @@ public final class Interface {
 
         public Builder excludeApplications(final Collection<String> applications) {
             excludedApplications.addAll(applications);
+            return this;
+        }
+
+        public Builder includeApplication(final String application) {
+            includedApplications.add(application);
+            return this;
+        }
+
+        public Builder includeApplications(final Collection<String> applications) {
+            includedApplications.addAll(applications);
             return this;
         }
 
